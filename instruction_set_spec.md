@@ -25,6 +25,7 @@
 |Or|OR|11|OR reg, src|Or value from src with destination register|
 |Exclusive or|XOR|12|XOR reg, src|XOR value from src with destination register|
 |Halt|HLT|13|HLT| Halt the machine|
+|Sub|SUB|14|SUB reg, src| Sub src from destination and store in destination|
 
 *cnt must be less than 32
 *Identifiers(Labels) must be all upper cases

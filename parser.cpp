@@ -56,6 +56,7 @@ void build_ops_table(){
     reserved_ops.insert(pair<string, int>("OR", 2));
     reserved_ops.insert(pair<string, int>("XOR", 2));
     reserved_ops.insert(pair<string, int>("HLT", 0));
+    reserved_ops.insert(pair<string, int>("SUB", 2));
 }
 //Matching function, return required operand number, -1 for not found
 int search_ops(string s){
@@ -321,6 +322,7 @@ void build_insttab(){
     insttab.insert(pair<string, string>("OR", "1011"));
     insttab.insert(pair<string, string>("XOR", "1100"));
     insttab.insert(pair<string, string>("HLT", "1101"));
+    insttab.insert(pair<string, string>("SUB", "1110"));
 }
 //build condition table
 map<string, string> condtab;
@@ -413,7 +415,8 @@ void asm_to_machine(){
             prog[i].op.ident == "CMP" ||
             prog[i].op.ident == "AND" ||
             prog[i].op.ident == "OR"  ||
-            prog[i].op.ident == "XOR") {
+            prog[i].op.ident == "XOR" ||
+            prog[i].op.ident == "SUB") {
             //27 ~ 24
             //determine source type
             if(prog[i].src.type == IMM_T){
@@ -547,7 +550,7 @@ void asm_to_machine(){
             //Semantic check
             map<string, int>::iterator dst_loc = symtab.find(prog[i].dst.ident);
             if(prog[i].dst.type == IDENT_T && dst_loc == symtab.end()){
-                printf("Line %d, Load: Unknown memory label\n", i + 1);
+                printf("Line %d, Store: Unknown memory label\n", i + 1);
                 exit(1);
             }
             //src
