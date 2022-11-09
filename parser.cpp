@@ -541,17 +541,24 @@ void asm_to_machine(){
         }
         if(prog[i].op.ident == "STR"){
             //27 ~ 24 
+            int dst_flag = -1; //0 for direct, 1 for indirect
+            int indirect_reg_num = -1;
+            map<string, int>::iterator dst_loc = symtab.find(prog[i].dst.ident);
             if(prog[i].src.type == IDENT_T){
-                res += "0000";
+                res += "0";
             }else{
-                printf("Line %d, Str destination must be a memory location\n", i + 1);
+                printf("Line %d, STR source error\n", i + 1);
                 exit(1);
             }
             //Semantic check
-            map<string, int>::iterator dst_loc = symtab.find(prog[i].dst.ident);
-            if(prog[i].dst.type == IDENT_T && dst_loc == symtab.end()){
-                printf("Line %d, Store: Unknown memory label\n", i + 1);
-                exit(1);
+            if(prog[i].dst.type == IDENT_T && (indirect_reg_num = parse_reg_id(prog[i].dst.ident)) >= 0){
+                res += "100";
+                dst_flag = 1;
+            }else if(dst_loc != symtab.end()){
+                res += "000";
+                dst_flag = 0;
+            }else{
+                printf("Line %d, STR destination error\n", i + 1);
             }
             //src
             if(prog[i].src.type != IDENT_T){
@@ -566,7 +573,10 @@ void asm_to_machine(){
                 res += bitset<12>(reg).to_string();
             }
             //dst
-            res += bitset<12>(dst_loc->second).to_string();
+            if(dst_flag){
+                res += bitset<12>(indirect_reg_num).to_string();
+            }else
+                res += bitset<12>(dst_loc->second).to_string();
             machine_code.push_back(res);
             continue;
         }

@@ -14,7 +14,7 @@
 |NOP| NOP| 0|NOP|No operation|
 |Branch|BRA| 1| BRA mem, cc|Branch to destination memory location if the condition code is set(cc)|
 |Load|LD|2|LD reg, mem(imm)|Load value from memory and store in specified register|
-|Store|STR|3|STR mem, reg|Store value from register to specified memory locaiton|
+|Store|STR|3|STR mem_label(mem location), reg|Store value from register to specified memory locaiton, when dsttype = 1, store the value to the address stored in DST|
 |Add| ADD|4|ADD reg, src|Add value from src and add to destination register|
 |Multiply|MUL|5|MUL reg, src|Multiply value from src with destination register|
 |Complement| CMP|6|CMP reg, src|Complement value from source and store in destination register|
